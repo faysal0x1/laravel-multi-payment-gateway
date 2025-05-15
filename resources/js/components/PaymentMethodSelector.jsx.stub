@@ -1,0 +1,36 @@
+import React, { useState, useEffect } from 'react';
+
+const PaymentMethodSelector = ({ gateways = [], onSelected }) => {
+  const [selectedGateway, setSelectedGateway] = useState(null);
+
+  const availableGateways = gateways.filter(g => g.is_active);
+
+  useEffect(() => {
+    if (selectedGateway) {
+      onSelected?.(selectedGateway);
+    }
+  }, [selectedGateway]);
+
+  return (
+    <div className="payment-method-selector">
+      {availableGateways.map((gateway) => (
+        <div key={gateway.name} className="payment-option">
+          <input
+            type="radio"
+            id={gateway.name}
+            name="payment-gateway"
+            value={gateway.name}
+            checked={selectedGateway === gateway.name}
+            onChange={() => setSelectedGateway(gateway.name)}
+          />
+          <label htmlFor={gateway.name}>
+            <img src={gateway.logo} alt={gateway.display_name} />
+            {gateway.display_name}
+          </label>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default PaymentMethodSelector;

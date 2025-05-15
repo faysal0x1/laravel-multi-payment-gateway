@@ -1,0 +1,20 @@
+<div class="form-group">
+    <label for="is_active">Active</label>
+    <select name="is_active" id="is_active" class="form-control">
+        <option value="1" {{ isset($gateway) && $gateway->is_active ? 'selected' : '' }}>Yes</option>
+        <option value="0" {{ isset($gateway) && !$gateway->is_active ? 'selected' : '' }}>No</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="test_mode">Test Mode</label>
+    <select name="test_mode" id="test_mode" class="form-control">
+        <option value="1" {{ isset($gateway) && $gateway->test_mode ? 'selected' : '' }}>Yes</option>
+        <option value="0" {{ isset($gateway) && !$gateway->test_mode ? 'selected' : '' }}>No</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="credentials">Credentials (JSON)</label>
+    <textarea name="credentials" id="credentials" class="form-control" rows="6">{{ isset($gateway) ? json_encode($gateway->credentials, JSON_PRETTY_PRINT) : '{}' }}</textarea>
+</div>

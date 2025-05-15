@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use faysal0x1\PaymentGateway\Models\PaymentGateway;
+use Illuminate\Http\Request;
+
+class PaymentGatewayController extends Controller
+{
+    public function index()
+    {
+        $gateways = PaymentGateway::all();
+        return view('admin.payment-gateways.index', compact('gateways'));
+    }
+
+    public function create()
+    {
+        return view('admin.payment-gateways.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|unique:payment_gateways',
+            'is_active' => 'boolean',
+            'test_mode' => 'boolean',
+            'credentials' => 'array',
+        ]);
+
+        PaymentGateway::create($validated);
+
+        return redirect()->route('admin.payment-gateways.index')
+            ->with('success', 'Payment gateway created successfully');
+    }
+
+    public function edit(PaymentGateway $gateway)
+    {
+        return view('admin.payment-gateways.edit', compact('gateway'));
+    }
+
+    public function update(Request $request, PaymentGateway $gateway)
+    {
+        $validated = $request->validate([
+            'is_active' => 'boolean',
+            'test_mode' => 'boolean',
+            'credentials' => 'array',
+        ]);
+
+        $gateway->update($validated);
+
+        return redirect()->route('admin.payment-gateways.index')
+            ->with('success', 'Payment gateway updated successfully');
+    }
+
+    public function destroy(PaymentGateway $gateway)
+    {
+        $gateway->delete();
+        return redirect()->route('admin.payment-gateways.index')
+            ->with('success', 'Payment gateway deleted successfully');
+    }
+
+    public function toggleStatus(PaymentGateway $gateway)
+    {
+        $gateway->update(['is_active' => !$gateway->is_active]);
+        return back()->with('success', 'Status updated successfully');
+    }
+}

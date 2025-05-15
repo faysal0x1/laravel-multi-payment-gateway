@@ -1,0 +1,56 @@
+@extends('layouts.admin')
+
+@section('content')
+<div class="container">
+    <h1>Payment Gateways</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <h3 class="card-title">Gateways List</h3>
+                <a href="{{ route('admin.payment-gateways.create') }}" class="btn btn-primary">
+                    Add New Gateway
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Test Mode</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($gateways as $gateway)
+                    <tr>
+                        <td>{{ $gateway->name }}</td>
+                        <td>
+                            <span class="badge badge-{{ $gateway->is_active ? 'success' : 'danger' }}">
+                                {{ $gateway->is_active ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ $gateway->test_mode ? 'Yes' : 'No' }}
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.payment-gateways.edit', $gateway) }}" class="btn btn-sm btn-info">
+                                Edit
+                            </a>
+                            <form action="{{ route('admin.payment-gateways.toggle-status', $gateway) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-{{ $gateway->is_active ? 'warning' : 'success' }}">
+                                    {{ $gateway->is_active ? 'Deactivate' : 'Activate' }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
