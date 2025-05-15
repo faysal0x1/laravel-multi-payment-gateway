@@ -1,19 +1,24 @@
 <?php
+namespace faysal0x1\PaymentGateway\Exceptions;
 
-namespace MultiPayment\Exceptions;
+use Exception;
 
-class InvalidGatewayException extends PaymentException
+class InvalidGatewayException extends Exception
 {
-    /**
-     * Create a new invalid gateway exception instance.
-     *
-     * @param string $gateway
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct($gateway, $code = 0, Exception $previous = null)
+    protected $code = 404;
+
+    public static function notFound(string $gateway): self
     {
-        $message = "The payment gateway '{$gateway}' is not supported or invalid.";
-        parent::__construct($message, $code, $previous);
+        return new static("Payment gateway [{$gateway}] not found");
+    }
+
+    public static function driverNotFound(string $driver): self
+    {
+        return new static("Payment gateway driver [{$driver}] not found");
+    }
+
+    public static function notConfigured(string $gateway): self
+    {
+        return new static("Payment gateway [{$gateway}] is not configured");
     }
 }
